@@ -1,8 +1,7 @@
 version: '3'
 services:
   nginx:
-    build:
-      context: ./docker-images/nginx/${NGINX_VERSION}
+    image: nghviet/ecom_nginx
     ports:
       - 8000:8000
     tty: true
@@ -17,12 +16,10 @@ services:
       - magento
 
   phpfpm:
-    build:
-      context: ./docker-images/php/${PHP_VERSION}
+    image: nghviet/ecom_phpfpm
     links:
       - db1
     volumes:
-      - ./docker-images/php/${PHP_VERSION}/.composer:/var/www/.composer
       - ./src/app_data1:/var/www/html
       - ./src/phpfpm_log1:/var/log
       - ./src/sock_data1:/sock
@@ -40,10 +37,8 @@ services:
       - magento
 
   cron:
-    build:
-      context: ./docker-images/php/${PHP_VERSION}
+    image: nghviet/ecom_cron
     user: root
-    command: /usr/local/bin/cronstart
     tty: true
     links:
       - db1
