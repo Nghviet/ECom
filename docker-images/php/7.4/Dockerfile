@@ -84,17 +84,13 @@ RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/update/cron.php\
   && printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento cron:run\n' >> /etc/crontab \
   && printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento setup:cron:run\n#\n' >> /etc/crontab
 
-COPY ./www.conf /usr/local/etc/php-fpm.d/
-COPY ./php.ini /usr/local/etc/php/
-COPY ./php-fpm.conf /usr/local/etc/
-COPY bin/cronstart /usr/local/bin/
+ADD ./www.conf /usr/local/etc/php-fpm.d/
+ADD ./php.ini /usr/local/etc/php/
+ADD ./php-fpm.conf /usr/local/etc/
+ADD bin/cronstart /usr/local/bin/
 
 RUN mkdir -p /etc/nginx/html /var/www/html /sock \
   && chown -R app:app /etc/nginx /var/www /usr/local/etc/php/conf.d /sock
-
-COPY bin/init.sh /var/www/html
-RUN chown -R app:app /var/www/html/init.sh
-RUN chmod 755 /var/www/html/init.sh
 
 USER app:app
 

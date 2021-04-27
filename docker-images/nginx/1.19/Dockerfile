@@ -5,8 +5,8 @@ RUN groupadd -g 1000 app \
 RUN touch /var/run/nginx.pid
 RUN mkdir /sock
 
-COPY ./nginx.conf /etc/nginx/
-COPY ./default.conf /etc/nginx/conf.d/
+ADD ./nginx.conf /etc/nginx/
+ADD ./default.conf /etc/nginx/conf.d/
 
 RUN mkdir -p /var/www/html
 RUN chown -R app:app /etc/nginx /var/www /var/cache/nginx /var/run/nginx.pid /sock
