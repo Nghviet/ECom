@@ -29,11 +29,12 @@ services:
 
   fpm:
     hostname: fpm.magento2.docker
-    image: meanbee/magento2-php:7.0-fpm
+    image: meanbee/magento2-php:7.4-fpm
     ports:
       - 9000
     links:
       - db
+      - elasticsearch1
     volumes_from:
       - appdata
     env_file:
@@ -54,9 +55,10 @@ services:
 
   cli:
     hostname: cli.magento2.docker
-    image: meanbee/magento2-php:7.0-cli
+    image: meanbee/magento2-php:7.4-cli
     links:
       - db
+      - elasticsearch1
     volumes:
       - ~/.composer/cache:/root/.composer/cache
     volumes_from:
@@ -78,11 +80,11 @@ services:
       - M2SETUP_ADMIN_EMAIL=dummy@gmail.com
       - M2SETUP_ADMIN_USER=admin
       - M2SETUP_ADMIN_PASSWORD=password1
-      - M2SETUP_VERSION=2.1.*
+      - M2SETUP_VERSION=2.4.2
       # - M2SETUP_USE_SAMPLE_DATA=true
 
   cron:
-    image: meanbee/magento2-php:7.0-cli
+    image: meanbee/magento2-php:7.4-cli
     hostname: magento2-cron.docker
     command: run-cron
     env_file:
@@ -103,3 +105,17 @@ services:
     image: tianon/true
     volumes:
       - /var/lib/mysql
+
+  elasticsearch1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    tty: true
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes_from:
+      - appdata
+    volumes:
+      - data:/usr/share/elasticsearch/data
