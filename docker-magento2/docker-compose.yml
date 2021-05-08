@@ -3,7 +3,7 @@ services:
   varnish:
     image: meanbee/magento2-varnish:latest
     environment:
-      - VIRTUAL_HOST=localhost
+      - VIRTUAL_HOST=magento2.docker
       - VIRTUAL_PORT=80
       - HTTPS_METHOD=noredirect
     ports:
@@ -29,19 +29,18 @@ services:
 
   fpm:
     hostname: fpm.magento2.docker
-    image: meanbee/magento2-php:7.4-fpm
+    image: meanbee/magento2-php:7.3-fpm
     ports:
       - 9000
     links:
       - db
-      - elasticsearch1
     volumes_from:
       - appdata
     env_file:
       - ./global.env
 
   db:
-    image: mariadb:10
+    image: mariadb:10.2
     ports:
       - 3306
     volumes_from:
@@ -55,10 +54,9 @@ services:
 
   cli:
     hostname: cli.magento2.docker
-    image: meanbee/magento2-php:7.4-cli
+    image: meanbee/magento2-php:7.3-cli
     links:
       - db
-      - elasticsearch1
     volumes:
       - ~/.composer/cache:/root/.composer/cache
     volumes_from:
@@ -72,7 +70,7 @@ services:
       - M2SETUP_DB_NAME=magento2
       - M2SETUP_DB_USER=magento2
       - M2SETUP_DB_PASSWORD=magento2
-      - M2SETUP_BASE_URL=http://34.87.185.241/
+      - M2SETUP_BASE_URL=http://localhost/
       # - M2SETUP_SECURE_BASE_URL=https://magento2.docker/
       - M2SETUP_BACKEND_FRONTNAME=admin
       - M2SETUP_ADMIN_FIRSTNAME=Admin
@@ -80,11 +78,11 @@ services:
       - M2SETUP_ADMIN_EMAIL=dummy@gmail.com
       - M2SETUP_ADMIN_USER=admin
       - M2SETUP_ADMIN_PASSWORD=password1
-      - M2SETUP_VERSION=2.4.2
+      - M2SETUP_VERSION=2.3.6
       # - M2SETUP_USE_SAMPLE_DATA=true
 
   cron:
-    image: meanbee/magento2-php:7.4-cli
+    image: meanbee/magento2-php:7.3-cli
     hostname: magento2-cron.docker
     command: run-cron
     env_file:
@@ -105,17 +103,3 @@ services:
     image: tianon/true
     volumes:
       - /var/lib/mysql
-
-  elasticsearch1:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
-    tty: true
-    environment:
-      - discovery.type=single-node
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes_from:
-      - appdata
-    volumes:
-      - data:/usr/share/elasticsearch/data
