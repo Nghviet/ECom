@@ -70,7 +70,7 @@ services:
       - M2SETUP_DB_NAME=magento2
       - M2SETUP_DB_USER=magento2
       - M2SETUP_DB_PASSWORD=magento2
-      - M2SETUP_BASE_URL=http://localhost/
+      - M2SETUP_BASE_URL=http://34.87.185.241//
       # - M2SETUP_SECURE_BASE_URL=https://magento2.docker/
       - M2SETUP_BACKEND_FRONTNAME=admin
       - M2SETUP_ADMIN_FIRSTNAME=Admin
